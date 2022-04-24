@@ -8,6 +8,7 @@
     "url": "https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite.git"
   },
   "scripts": {
+    "prebuild": "rm -rf ./dist",
     "build": "tsc --noEmit && vite build",
     "dev": "nodemon"
   },
