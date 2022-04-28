@@ -22,6 +22,7 @@ const manifest: ManifestType = {
       matches: [],
     },
   ],
+  permissions: ["storage"],
 };
 
 export default manifest;

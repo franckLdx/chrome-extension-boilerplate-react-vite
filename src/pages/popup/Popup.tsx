@@ -12,18 +12,26 @@ export const Popup: FC = () => {
     return <p>Loading ...</p>;
   }
 
-  const onToggleSelection = () => {
-
-  }
+  const onToggleSelection = async (id: number) => {
+    const oldSelectedUser = await chrome.storage.sync.get("selectedUser");
+    if (oldSelectedUser.selectedUser === id) {
+      await chrome.storage.sync.remove("selectedUser");
+    } else {
+      await chrome.storage.sync.set({ selectedUser: id });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-2 mx-2">
       {usersData.data.map((user) => (
-        <button key={user.id} className="text-white bg-yellow">
+        <button
+          key={user.id}
+          className="text-white bg-yellow"
+          onClick={() => onToggleSelection(user.id)}
+        >
           {user.name}
         </button>
       ))}
     </div>
   );
-  // return <button className="text-white bg-yellow">CLICK HERE !</button>;
 };
