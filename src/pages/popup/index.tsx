@@ -1,7 +1,9 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { Popup } from "@pages/popup/Popup";
 import "@pages/popup/index.css";
-import Popup from "@pages/popup/Popup";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "./queryClient";
 
 function init() {
   const appContainer = document.querySelector("#app-container");
@@ -9,7 +11,11 @@ function init() {
     throw new Error("Can not find AppContainer");
   }
   const root = createRoot(appContainer);
-  root.render(<Popup />);
+  root.render(
+    <QueryClientProvider client={queryClient}>
+      <Popup />
+    </QueryClientProvider>
+  );
 }
 
 init();
