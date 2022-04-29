@@ -24,7 +24,7 @@ export const List: FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 overflow-auto">
+    <div className="flex flex-col gap-2 max-h-80 overflow-auto">
       {usersData.data.map((user) => (
         <Button key={user.id} onClick={() => onToggleSelection(user.id)}>
           {user.name}
