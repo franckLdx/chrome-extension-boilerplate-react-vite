@@ -1,9 +1,14 @@
-import React, { FC } from "react";
+import React, { FC, useDeferredValue } from "react";
 import { Button } from "@src/components/Button";
-import { useGetUsers } from "./queries";
+import { useGetUsers } from "../services/queries";
+import { useRecoilValue } from "recoil";
+import { filterState } from "../services/atom";
+import { isNameMatch } from "../services/declarations";
+import { ToggleUserSelectionButton } from "./ToggleUserSelectionButton";
 
 export const List: FC = () => {
   const usersData = useGetUsers();
+  const filter = useRecoilValue(filterState);
 
   if (usersData.isRefetching) {
     return <p>Please wait...</p>;
@@ -13,6 +18,10 @@ export const List: FC = () => {
     }
     return <p>Loading ...</p>;
   }
+
+  const displayedList = filter
+    ? usersData.data.filter((user) => isNameMatch(user, filter))
+    : usersData.data;
 
   const onToggleSelection = async (id: number) => {
     const oldSelectedUser = await chrome.storage.sync.get("selectedUser");
@@ -25,10 +34,8 @@ export const List: FC = () => {
 
   return (
     <div className="flex flex-col gap-2 max-h-80 overflow-auto">
-      {usersData.data.map((user) => (
-        <Button key={user.id} onClick={() => onToggleSelection(user.id)}>
-          {user.name}
-        </Button>
+      {displayedList.map((user) => (
+        <ToggleUserSelectionButton key={user.id} user={user} />
       ))}
     </div>
   );

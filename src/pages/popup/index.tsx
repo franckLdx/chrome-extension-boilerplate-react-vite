@@ -1,9 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Popup } from "@pages/popup/Popup";
+import { Popup } from "@src/pages/popup/Popup";
 import "@pages/popup/index.css";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./queryClient";
+import { RecoilRoot } from "recoil";
 
 function init() {
   const appContainer = document.querySelector("#app-container");
@@ -12,9 +13,11 @@ function init() {
   }
   const root = createRoot(appContainer);
   root.render(
-    <QueryClientProvider client={queryClient}>
-      <Popup />
-    </QueryClientProvider>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <Popup />
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 }
 

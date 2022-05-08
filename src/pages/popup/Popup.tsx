@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import "@pages/popup/Popup.css";
-import { List } from "./list";
-import { RefreshButton } from "./RefreshButton";
-import { Filter } from "./Filter";
+import { List } from "./components/List";
+import { RefreshButton } from "./components/RefreshButton";
+import { Filter } from "./components/Filter";
 
 export const Popup: FC = () => {
   return (
