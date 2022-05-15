@@ -15,3 +15,12 @@ const getUsers = async (): Promise<User[]> => {
 
 export const useGetUsers = () => useQuery(usersTag, getUsers);
 
+export const useGetUser = () => {
+  const { data: users } = useGetUsers();
+  return (userId: number): User | undefined => {
+    if (!users) {
+      return undefined;
+    }
+    return users.find((user) => user.id === userId);
+  };
+};

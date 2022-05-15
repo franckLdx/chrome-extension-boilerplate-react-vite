@@ -1,4 +1,14 @@
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { User } from "./declarations";
+import { useGetUser } from "./users";
+
+export const useGetSelectedUser = (): User | undefined => {
+  const selectedUserIdValue = useRecoilValue(selectedUserId);
+  const getUser = useGetUser();
+  return selectedUserIdValue != undefined
+    ? getUser(selectedUserIdValue)
+    : undefined;
+};
 
 export const useToggleUserSelection = () => {
   const [selectedUserIdValue, setSelectedUserid] =
@@ -15,24 +25,23 @@ export const useToggleUserSelection = () => {
 export const selectedUserId = atom<number | undefined>({
   key: "selectedUser",
   default: undefined,
-  effects_UNSTABLE: [
-    ({ onSet, resetSelf }) => {
-      onSet((newId, oldId) => {
-        if (newId === oldId) {
-          resetSelf();
-        }
-      });
-    },
-  ],
+  // effects_UNSTABLE: [
+  //   ({ onSet }) => {
+  //     onSet(registerUserSelection);
+  //   },
+  // ],
 });
 
 const key = "selectedUser";
 
-export const toggleUserSelection = async (id: number) => {
-  const oldSelectedUser = await chrome.storage.sync.get(key);
-  if (oldSelectedUser.selectedUser === id) {
+const registerUserSelection = async (
+  userId: number | undefined
+): Promise<void> => {
+  console.log("=======");
+
+  if (userId === undefined) {
     await chrome.storage.sync.remove(key);
   } else {
-    await chrome.storage.sync.set({ [key]: id });
+    await chrome.storage.sync.set({ [key]: userId });
   }
 };

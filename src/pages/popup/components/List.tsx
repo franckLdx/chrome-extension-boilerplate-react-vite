@@ -2,12 +2,36 @@ import React, { FC } from "react";
 import { useGetUsers } from "../services/users";
 import { useRecoilValue } from "recoil";
 import { filterState } from "../services/filter";
-import { isNameMatch } from "../services/declarations";
+import { isNameMatch, User } from "../services/declarations";
 import { ToggleUserSelectionButton } from "./ToggleUserSelectionButton";
+import { selectedUserId } from "../services/selectedUser";
+
+interface GetDisplayedListProps {
+  selectedUserIdValue: number | undefined;
+  filter: string | undefined;
+  usersList: User[];
+}
+const getDisplayedList = ({
+  selectedUserIdValue,
+  filter,
+  usersList,
+}: GetDisplayedListProps): User[] => {
+  let displayedList = [...usersList];
+  if (filter) {
+    displayedList = displayedList.filter((user) => isNameMatch(user, filter));
+  }
+  if (selectedUserIdValue) {
+    displayedList = displayedList.filter((user) => {
+      return user.id !== selectedUserIdValue;
+    });
+  }
+  return displayedList;
+};
 
 export const List: FC = () => {
   const usersData = useGetUsers();
   const filter = useRecoilValue(filterState);
+  const selectedUserIdValue = useRecoilValue(selectedUserId);
 
   if (usersData.isRefetching) {
     return <p>Please wait...</p>;
@@ -18,9 +42,11 @@ export const List: FC = () => {
     return <p>Loading ...</p>;
   }
 
-  const displayedList = filter
-    ? usersData.data.filter((user) => isNameMatch(user, filter))
-    : usersData.data;
+  const displayedList = getDisplayedList({
+    selectedUserIdValue,
+    filter,
+    usersList: usersData.data,
+  });
 
   return (
     <div className="flex flex-col gap-2 max-h-80 overflow-auto">
