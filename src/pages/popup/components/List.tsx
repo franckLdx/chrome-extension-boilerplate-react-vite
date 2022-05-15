@@ -1,5 +1,4 @@
-import React, { FC, useDeferredValue } from "react";
-import { Button } from "@src/components/Button";
+import React, { FC } from "react";
 import { useGetUsers } from "../services/queries";
 import { useRecoilValue } from "recoil";
 import { filterState } from "../services/atom";
@@ -22,15 +21,6 @@ export const List: FC = () => {
   const displayedList = filter
     ? usersData.data.filter((user) => isNameMatch(user, filter))
     : usersData.data;
-
-  const onToggleSelection = async (id: number) => {
-    const oldSelectedUser = await chrome.storage.sync.get("selectedUser");
-    if (oldSelectedUser.selectedUser === id) {
-      await chrome.storage.sync.remove("selectedUser");
-    } else {
-      await chrome.storage.sync.set({ selectedUser: id });
-    }
-  };
 
   return (
     <div className="flex flex-col gap-2 max-h-80 overflow-auto">
