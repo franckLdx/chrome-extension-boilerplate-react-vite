@@ -1,7 +1,8 @@
 import React, { FC, MouseEventHandler } from "react";
-import { Button } from "@src/components/Button";
+import { ButonType, Button } from "@src/components/Button";
 import { User } from "../services/declarations";
-import { toggleuserSelection } from "../services/storage";
+import { selectedUserId } from "../services/selectedUser";
+import { useRecoilState } from "recoil";
 
 interface ToggleUserSelectionButtonProps {
   user: User;
@@ -10,11 +11,17 @@ interface ToggleUserSelectionButtonProps {
 export const ToggleUserSelectionButton: FC<ToggleUserSelectionButtonProps> = ({
   user,
 }) => {
+  const [selectedUserIdValue, setSelectedUserid] =
+    useRecoilState(selectedUserId);
+
   const onClick: MouseEventHandler<HTMLButtonElement> = () =>
-    toggleuserSelection(user.id);
+    setSelectedUserid(user.id);
+
+  const type: ButonType =
+    selectedUserIdValue === user.id ? "selected" : "default";
 
   return (
-    <Button key={user.id} onClick={onClick}>
+    <Button type={type} key={user.id} onClick={onClick}>
       {user.name}
     </Button>
   );

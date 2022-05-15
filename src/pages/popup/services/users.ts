@@ -14,3 +14,4 @@ const getUsers = async (): Promise<User[]> => {
 };
 
 export const useGetUsers = () => useQuery(usersTag, getUsers);
+

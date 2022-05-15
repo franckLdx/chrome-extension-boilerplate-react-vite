@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Button } from "@src/components/Button";
-import { useGetUsers } from "../services/queries";
+import { useGetUsers } from "../services/users";
 
 export const RefreshButton: FC = () => {
   const { refetch } = useGetUsers();

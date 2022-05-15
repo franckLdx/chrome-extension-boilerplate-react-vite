@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { useGetUsers } from "../services/queries";
+import { useGetUsers } from "../services/users";
 import { useRecoilValue } from "recoil";
-import { filterState } from "../services/atom";
+import { filterState } from "../services/filter";
 import { isNameMatch } from "../services/declarations";
 import { ToggleUserSelectionButton } from "./ToggleUserSelectionButton";
 
