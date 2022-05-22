@@ -1,47 +1,44 @@
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { User } from "./declarations";
 import { useGetUser } from "./users";
 
 export const useGetSelectedUser = (): User | undefined => {
-  const selectedUserIdValue = useRecoilValue(selectedUserId);
+  const { data: selectedUserIdValue } = useGetSelectedUserId();
   const getUser = useGetUser();
   return selectedUserIdValue != undefined
     ? getUser(selectedUserIdValue)
     : undefined;
 };
 
-export const useToggleUserSelection = () => {
-  const [selectedUserIdValue, setSelectedUserid] =
-    useRecoilState(selectedUserId);
-  return (userId: number) => {
-    if (userId === selectedUserIdValue) {
-      setSelectedUserid(undefined);
-    } else {
-      setSelectedUserid(userId);
-    }
-  };
-};
+export const useGetSelectedUserId = () =>
+  useQuery({
+    queryKey: ["selectedUserId"],
+    queryFn: readUserSelection,
+  });
 
-export const selectedUserId = atom<number | undefined>({
-  key: "selectedUser",
-  default: undefined,
-  // effects_UNSTABLE: [
-  //   ({ onSet }) => {
-  //     onSet(registerUserSelection);
-  //   },
-  // ],
-});
+export const useSetSelectedUserId = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: registerUserSelection,
+    onSettled: (_response, _error, selectedUserId) => {
+      queryClient.setQueryData("selectedUserId", selectedUserId);
+    },
+  });
+};
 
 const key = "selectedUser";
 
 const registerUserSelection = async (
   userId: number | undefined
 ): Promise<void> => {
-  console.log("=======");
-
   if (userId === undefined) {
     await chrome.storage.sync.remove(key);
   } else {
     await chrome.storage.sync.set({ [key]: userId });
   }
+};
+
+const readUserSelection = async (): Promise<number | undefined> => {
+  const data = await chrome.storage.sync.get(key);
+  return data.key;
 };

@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { filterState } from "../services/filter";
 import { isNameMatch, User } from "../services/declarations";
 import { ToggleUserSelectionButton } from "./ToggleUserSelectionButton";
-import { selectedUserId } from "../services/selectedUser";
+import { useGetSelectedUserId } from "../services/selectedUser";
 
 interface GetDisplayedListProps {
   selectedUserIdValue: number | undefined;
@@ -31,7 +31,7 @@ const getDisplayedList = ({
 export const List: FC = () => {
   const usersData = useGetUsers();
   const filter = useRecoilValue(filterState);
-  const selectedUserIdValue = useRecoilValue(selectedUserId);
+  const { data: selectedUserId } = useGetSelectedUserId();
 
   if (usersData.isRefetching) {
     return <p>Please wait...</p>;
@@ -43,7 +43,7 @@ export const List: FC = () => {
   }
 
   const displayedList = getDisplayedList({
-    selectedUserIdValue,
+    selectedUserIdValue: selectedUserId,
     filter,
     usersList: usersData.data,
   });
