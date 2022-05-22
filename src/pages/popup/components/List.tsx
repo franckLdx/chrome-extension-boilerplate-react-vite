@@ -49,10 +49,14 @@ export const List: FC = () => {
   });
 
   return (
-    <div className="flex flex-col gap-2 max-h-80 overflow-auto">
+    <section className="flex flex-col gap-2 max-h-96 overflow-auto">
       {displayedList.map((user) => (
-        <ToggleUserSelectionButton key={user.id} user={user} />
+        <ToggleUserSelectionButton
+          key={user.id}
+          className="shrink-0 grow-0"
+          user={user}
+        />
       ))}
-    </div>
+    </section>
   );
 };
