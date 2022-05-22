@@ -34,7 +34,7 @@ export const List: FC = () => {
   const { data: selectedUserId } = useGetSelectedUserId();
 
   if (usersData.isRefetching) {
-    return <p>Please wait...</p>;
+    return <></>;
   } else if (usersData.data === undefined) {
     if (usersData.status === "error") {
       return <p>Failed to get users</p>;
